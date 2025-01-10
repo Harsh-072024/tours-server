@@ -52,17 +52,17 @@ app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
 
 // debug
-// Instead of module.exports = (req, res) => {...}
-// index.js (ES module syntax)
-export default (req, res) => {
-    console.log("Function started");
+// // Instead of module.exports = (req, res) => {...}
+// // index.js (ES module syntax)
+// export default (req, res) => {
+//     console.log("Function started");
   
-    // Your function logic here
-    setTimeout(() => {
-      console.log("Function completed");
-      res.status(200).send("Success");
-    }, 500); // Simulating a small delay (adjust as necessary)
-  };
+//     // Your function logic here
+//     setTimeout(() => {
+//       console.log("Function completed");
+//       res.status(200).send("Success");
+//     }, 500); // Simulating a small delay (adjust as necessary)
+//   };
   
   
   
