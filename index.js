@@ -39,8 +39,9 @@ const connect = async () => {
 
 // Define CORS options
 const corsOptions = {
-  origin: ["https://tours-client-kappa.vercel.app"], // Adjust the front-end URL if necessary
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  // origin: ["https://tours-client-kappa.vercel.app"], // Adjust the front-end URL if necessary
+  origin: "*", // Adjust the front-end URL if necessary
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
 
