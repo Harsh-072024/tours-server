@@ -14,7 +14,8 @@ dotenv.config()
 const app = express();
 const port = process.env.PORT  || 8000;
 const corsOptions = {
-    origin:true,
+    origin: ["https://tours-client-kappa.vercel.app"],
+    methods:["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }
 
