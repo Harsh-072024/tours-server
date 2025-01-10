@@ -27,10 +27,22 @@ app.use(cors(corsOptions));
 // Database connection
 const connect = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        // Connect to MongoDB using the URI from environment variable
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log("MongoDB database connected");
+
+        // Test query to check the database connection
+        const test = await mongoose.connection.db.collection("users").findOne({});
+        if (test) {
+            console.log("Test query successful: Database is working!");
+        } else {
+            console.log("Test query returned no results, but database is connected.");
+        }
     } catch (err) {
-        console.error("MongoDB database connection failed:", err);
+        console.error("MongoDB database connection failed:", err.message);
     }
 };
 
@@ -41,7 +53,6 @@ app.get("/", (req, res) => {
 
 // Middleware
 app.use(express.json());
-app.use(cors(corsOptions));
 app.use(cookieParser());
 
 // Routes
@@ -51,24 +62,8 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
 
-// debug
-// // Instead of module.exports = (req, res) => {...}
-// // index.js (ES module syntax)
-// export default (req, res) => {
-//     console.log("Function started");
-  
-//     // Your function logic here
-//     setTimeout(() => {
-//       console.log("Function completed");
-//       res.status(200).send("Success");
-//     }, 500); // Simulating a small delay (adjust as necessary)
-//   };
-  
-  
-  
-
 // Start Server
 app.listen(port, () => {
-    connect();
+    connect(); // Call connect function to establish database connection
     console.log("Server listening on port", port);
 });
