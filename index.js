@@ -13,11 +13,11 @@ import bookingRoute from "./routes/bookings.js"
 dotenv.config()
 const app = express();
 const port = process.env.PORT  || 8000;
-const corsOptions = {
+app.use(cors ( {
     origin: ["https://tours-client-kappa.vercel.app"],
     methods:["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-}
+}))
 
 //database connection
 // mongoose.set("strictQuery", false);
