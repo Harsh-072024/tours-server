@@ -27,14 +27,17 @@ app.use(cors(corsOptions));
 // Database connection
 const connect = async () => {
     try {
-        // Connect to MongoDB using the URI from environment variable
+        console.log("Connecting to MongoDB...");
+        const startTime = Date.now();
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log("MongoDB database connected");
+        console.log("MongoDB connected successfully");
+        const endTime = Date.now();
+        console.log(`MongoDB connection time: ${endTime - startTime}ms`);
 
-        // Test query to check the database connection
+        // Test query to ensure the database is functioning
         const test = await mongoose.connection.db.collection("users").findOne({});
         if (test) {
             console.log("Test query successful: Database is working!");
@@ -53,6 +56,7 @@ app.get("/", (req, res) => {
 
 // Middleware
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 // Routes
@@ -64,6 +68,7 @@ app.use("/api/v1/booking", bookingRoute);
 
 // Start Server
 app.listen(port, () => {
-    connect(); // Call connect function to establish database connection
+    connect();
     console.log("Server listening on port", port);
 });
+
