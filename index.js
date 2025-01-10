@@ -51,6 +51,17 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
 
+// debug
+module.exports = (req, res) => {
+    console.log("Function started");
+    
+    // Your function logic here
+    
+    console.log("Function completed");
+    res.status(200).send("Success");
+  };
+  
+
 // Start Server
 app.listen(port, () => {
     connect();
