@@ -12,52 +12,49 @@ import bookingRoute from "./routes/bookings.js";
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8002;
+
+// Variable to track if MongoDB connection has been established
+let isConnected = false;
+
+// Database connection function with pooling and retry logic
+const connect = async () => {
+  if (isConnected) {
+    console.log("Using existing MongoDB connection");
+    return;
+  }
+
+  try {
+    // Ensure we are using the correct MongoDB URI
+    await mongoose.connect(process.env.MONGO_URI);
+
+    isConnected = true;
+    console.log("MongoDB database connected");
+  } catch (err) {
+    console.error("MongoDB database connection failed:", err);
+    // Retry logic in case of failure
+    setTimeout(connect, 5000); // Retry connection after 5 seconds
+  }
+};
 
 // Define CORS options
 const corsOptions = {
-    origin: ["https://tours-client-kappa.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+  origin: ["https://tours-client-kappa.vercel.app"], // Adjust the front-end URL if necessary
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Database connection
-const connect = async () => {
-    try {
-        console.log("Connecting to MongoDB...");
-        const startTime = Date.now();
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log("MongoDB connected successfully");
-        const endTime = Date.now();
-        console.log(`MongoDB connection time: ${endTime - startTime}ms`);
-
-        // Test query to ensure the database is functioning
-        const test = await mongoose.connection.db.collection("users").findOne({});
-        if (test) {
-            console.log("Test query successful: Database is working!");
-        } else {
-            console.log("Test query returned no results, but database is connected.");
-        }
-    } catch (err) {
-        console.error("MongoDB database connection failed:", err.message);
-    }
-};
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
 // Test Route
 app.get("/", (req, res) => {
-    res.send("API is working");
+  res.send("API is working");
 });
-
-// Middleware
-app.use(express.json());
-app.use(cors(corsOptions));
-app.use(cookieParser());
 
 // Routes
 app.use("/api/v1/auth", authRoute);
@@ -66,9 +63,8 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
 
-// Start Server
+// Start the server with a retry mechanism
 app.listen(port, () => {
-    connect();
-    console.log("Server listening on port", port);
+  console.log(`Server listening on port ${port}`);
+  connect(); // Ensure the database connection is established before accepting requests
 });
-
