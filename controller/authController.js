@@ -69,7 +69,7 @@ export const login = async (req, res) => {
     // Set the token in cookies
     res
       .cookie("accessToken", token, {
-        // httpOnly: true,
+        httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Use secure cookies in production
         sameSite: "none", // Required for cross-origin cookies
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days expiration
