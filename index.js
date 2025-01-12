@@ -40,7 +40,7 @@ const connect = async () => {
 // Define CORS options
 const corsOptions = {
   origin: ["https://tours-client-kappa.vercel.app"], // Adjust the front-end URL if necessary
-  // origin: "*", // Adjust the front-end URL if necessary
+  origin: "http://localhost:3000", // Adjust the front-end URL if necessary
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], //Allowed methods
   allowedHeaders: ["Content-Type", "Authorization"], //allowed headers
   credentials: true,
